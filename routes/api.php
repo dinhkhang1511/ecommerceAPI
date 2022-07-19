@@ -32,8 +32,10 @@ Route::post('login','\App\Http\Controllers\api\LoginController@login');
 Route::post('authenticate','\App\Http\Controllers\api\LoginController@verifyAuthen');
 
 Route::get('getUser','\App\Http\Controllers\api\UserController@getDetails');
+
 Route::apiResource('users','\App\Http\Controllers\api\UserController');
-Route::apiResource('posts','\App\Http\Controllers\api\PostController');
+
+Route::apiResource('products','\App\Http\Controllers\api\ProductController');
 
 
 

@@ -48,9 +48,9 @@ class ShopController extends Controller
             if($product = Product::find($request->product_id))
             {
                 $product = Product::find($request->product_id);
-                $relatedProducts = $product->related;
+                $payload = $product->related;
 
-                return response()->json($relatedProducts,200);
+                return response()->json($payload,200);
             }
         }
 

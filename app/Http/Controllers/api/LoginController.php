@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Exception;
 use Firebase\JWT\Key;
+use stdClass;
 
 class LoginController extends Controller
 {
@@ -27,8 +28,9 @@ class LoginController extends Controller
                 $data = $user->toArray();
                 $data['roles'] = $user->roles->pluck('name')->toArray(); // get roles of user
                 $token = JWT::encode($data, $this->api_key, $this->hash);
-                $payload = ['token' => $token,
-                            'data'  => $data];
+                $payload = new stdClass();
+                $payload->token = $token;
+                $payload->data = $data;
                 return response()->json($payload);
             }
        }

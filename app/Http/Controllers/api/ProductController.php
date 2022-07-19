@@ -40,9 +40,17 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-        //
+        if($id === 'find')
+        {
+            // $arrId = explode(',',$request->product_id); // Dùng đề test postman
+            $arrId =$request->product_id;
+            $products = Product::find($arrId)->load('attributes.images','attributes.size','attributes.color');
+            $payload = new stdClass();
+            $payload->products = $products;
+            return response()->json($payload);
+        }
     }
 
     /**
