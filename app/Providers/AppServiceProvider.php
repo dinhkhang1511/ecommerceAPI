@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\SystemSetting;
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() == 'production') {
             URL::forceScheme('https');
         }
-        
+
         view()->composer('layouts.frontend.app', function ($view) {
             $cart = session('cart', []);
             $products = Product::find(array_keys($cart));
@@ -57,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('error', session('error'));
                 session()->forget('error');
             }
-            
+
             $view->with('setting', SystemSetting::all()->first());
         });
 

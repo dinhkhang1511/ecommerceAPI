@@ -26,7 +26,7 @@ class ShopService
 
         return $this->products->orderBy('price', request('sortby', 'asc'))
                 ->offset(request('offset', 0))
-                ->limit(request('limit', 5))
+                ->limit(request('limit', 6))
                 ->get();
     }
 

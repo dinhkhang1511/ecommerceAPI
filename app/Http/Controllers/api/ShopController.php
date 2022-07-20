@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ViewedProduct;
+use App\Services\ShopService;
 use Illuminate\Http\Request;
 use stdClass;
 
@@ -35,6 +36,7 @@ class ShopController extends Controller
                 $payload->reviews = $reviews;
                 // $payload->sizes = $sizes;
                 // $payload->colors = $colors;
+
                 return response()->json($payload,200);
             }
         }
@@ -49,11 +51,17 @@ class ShopController extends Controller
             {
                 $product = Product::find($request->product_id);
                 $payload = $product->related;
-
                 return response()->json($payload,200);
             }
         }
 
         return response('Not found',404);
+    }
+
+    public function filter()
+    {
+        $products = Product::query()->active();
+        $shopService = new ShopService($products);
+        return $shopService->filter();
     }
 }

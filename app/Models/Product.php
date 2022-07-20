@@ -66,6 +66,9 @@ class Product extends Model
         $this->attributes['quantity'] = collect(request('quantity'))->sum();
     }
 
+
+
+
     /*  *****************************ACCESSORS***************************** */
 
     public function getBestSellerAttribute()
@@ -113,7 +116,7 @@ class Product extends Model
         return $this->where('sub_category_id', $this->sub_category_id)
             ->active()
             ->where('id', '!=', $this->id)
-            ->with('attributes.images')
+            ->with('attributes.images',)
             ->get();
     }
 
@@ -137,10 +140,15 @@ class Product extends Model
         return $this->price * ((100 - $this->discount) / 100);
     }
 
-    public function getRatingStarAttribute()
+    public function getRatingAttribute()
     {
         return round($this->reviews->average('rating'));
     }
+
+    // public function getRatingStarAttribute()
+    // {
+    //     return round($this->reviews->average('rating'));
+    // }
 
     /*  *****************************METHODS***************************** */
 

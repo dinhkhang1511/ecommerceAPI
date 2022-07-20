@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Album;
 use App\Models\Blog;
 use App\Models\Category;
@@ -20,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return ProductResource::collection(Product::all());
     }
 
     /**
@@ -40,9 +41,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,Request $request)
+    public function show($param,Request $request)
     {
-        if($id === 'find')
+        if($param === 'find')
         {
             // $arrId = explode(',',$request->product_id); // Dùng đề test postman
             $arrId =$request->product_id;
@@ -51,6 +52,7 @@ class ProductController extends Controller
             $payload->products = $products;
             return response()->json($payload);
         }
+
     }
 
     /**
@@ -99,7 +101,7 @@ class ProductController extends Controller
             return Category::inRandomOrder()->limit(3)->get();
         });
 
-        $album = Album::display()->first();
+        $album = Album::display()->first()->load('images');
 
         $payload = new stdClass();
         $payload->bestSellers = $bestSellers;
