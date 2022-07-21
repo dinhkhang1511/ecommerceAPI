@@ -111,7 +111,7 @@ class ProductController extends Controller
         $payload->categories = $categories;
         $payload->album = $album;
 
-        return json_encode($payload);
+        return response()->json($payload);
 
 
         // $bestSellers = $product->best_seller;

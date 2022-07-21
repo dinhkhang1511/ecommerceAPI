@@ -48,9 +48,12 @@ Route::apiResource('colors','\App\Http\Controllers\api\ColorController');
 
 Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
 
-
+Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
 Route::apiResource('subCategories','\App\Http\Controllers\api\SubCategoryController');
+
+Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
+
 
 
 

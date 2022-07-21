@@ -4,18 +4,16 @@ use App\Services\CartService;
 use Illuminate\Support\Facades\File;
 
 if (! function_exists('success')) {
-    function success($nameRoute = 'home', $message = 'Operation successful')
+    function success($message = 'Operation Success', $status = 200)
     {
-        session()->put('success', $message);
-        return redirect()->route($nameRoute);
+        return response()->json($message,$status);
     }
 }
 
 if (! function_exists('error')) {
-    function error($nameRoute = 'home', $message = 'Operation failed')
+    function error($message = 'Operation Success', $status = 500)
     {
-        session()->put('error', $message);
-        return redirect()->route($nameRoute);
+        return response()->json($message,$status);
     }
 }
 
