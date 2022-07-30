@@ -23,7 +23,7 @@ class ShopController extends Controller
                 //xứ lý problems n + 1
                 $product->load(['attributes.images', 'reviews.images','reviews.user','attributes.color','attributes.size','subCategory.category']);
 
-                $reviews = $product->reviews;
+                // $reviews = $product->reviews;
 
                 //các sizes được lấy phải là duy nhất, tránh lỗi hiện thị các size trùng nhau
                 // $sizes = $product->attributes->unique('size_id');
@@ -33,7 +33,7 @@ class ShopController extends Controller
                 // $colors = $product->attributes->unique('color_id');
                 $payload = new stdClass();
                 $payload->product = $product;
-                $payload->reviews = $reviews;
+                // $payload->reviews = $reviews;
                 // $payload->sizes = $sizes;
                 // $payload->colors = $colors;
 

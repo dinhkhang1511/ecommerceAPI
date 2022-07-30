@@ -18,7 +18,11 @@ class BlogController extends Controller
      */
     public function index()
     {
-        return BlogResource::collection(Blog::latest()->paginate(3));
+        $query = Blog::query();
+        $query->latest();
+        $limit = request('limit',5);
+
+        return BlogResource::collection($query->paginate($limit));
     }
 
     /**
@@ -42,7 +46,13 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
+        return new BlogResource(Blog::find($id));
+    }
+
+    public function related($id)
+    {
+        $blog = Blog::find($id);
+        return  BlogResource::collection(Blog::relatedPost($blog));
     }
 
     /**

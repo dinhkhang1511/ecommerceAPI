@@ -11,7 +11,7 @@ if (! function_exists('success')) {
 }
 
 if (! function_exists('error')) {
-    function error($message = 'Operation Success', $status = 500)
+    function error($message = 'Operation Fail', $status = 500)
     {
         return response()->json($message,$status);
     }

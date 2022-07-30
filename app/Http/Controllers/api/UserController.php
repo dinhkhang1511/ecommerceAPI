@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\User;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use stdClass;
 
 class UserController extends Controller
 {
@@ -18,8 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-
+        return UserResource::collection(User::all());
     }
 
     /**
@@ -30,7 +31,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -41,8 +42,26 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        if($id === 'find')
+        {
+            $arrId =request()->id;
+            return UserResource::collection(User::find($arrId));
+        }
+        return error('Not found',404);
     }
+
+    public function getUserWishlist($id)
+    {
+        if(intval($id))
+        {
+                $wishlist = User::find($id)->wishlist->load('product');
+                $payload = new stdClass();
+                $payload->wishlist = $wishlist;
+                return response()->json($payload);
+        }
+        return error('Not found',404);
+    }
+
 
     /**
      * Update the specified resource in storage.

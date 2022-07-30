@@ -3,25 +3,20 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\SubCategoryResource;
-use App\Models\SubCategory;
+use App\Http\Resources\SettingResource;
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 
-class SubCategoryController extends Controller
+class SettingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = SubCategory::query();
-        if($request->has('limit')) {
-            $limit = intval($request->limit);
-            $query->limit($limit);
-        }
-        return SubCategoryResource::collection($query->get());
+        return new SettingResource(SystemSetting::first());
     }
 
     /**

@@ -39,6 +39,7 @@ Route::get('filter', 'ShopController@filter');
 Route::get('getUser','\App\Http\Controllers\api\UserController@getDetails');
 
 Route::apiResource('users','\App\Http\Controllers\api\UserController');
+Route::get('users/wishlist/{id}','\App\Http\Controllers\api\UserController@getUserWishlist');
 
 Route::apiResource('products','\App\Http\Controllers\api\ProductController');
 
@@ -53,7 +54,9 @@ Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 Route::apiResource('subCategories','\App\Http\Controllers\api\SubCategoryController');
 
 Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
+Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');
 
+Route::apiResource('systemSettings','\App\Http\Controllers\api\SettingController');
 
 
 
