@@ -18,10 +18,9 @@ class ShopController extends Controller
         {
             if($product = Product::find($request->product_id))
             {
-                ViewedProduct::view($product);
-
+                // ViewedProduct::view($product);
                 //xứ lý problems n + 1
-                $product->load(['attributes.images', 'reviews.images','reviews.user','attributes.color','attributes.size','subCategory.category']);
+                $product->load(['attributes.images', 'reviews.images','reviews.user','attributes.color','attributes.size','category.parent']);
 
                 // $reviews = $product->reviews;
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\ProductAttribute;
 
@@ -33,15 +34,15 @@ class ShopService
     public function filterByCategory()
     {
         if (request('category')) {
-            $subcategories = SubCategory::whereIn('category_id', explode(',', request('category')))->get()->modelKeys();
-            $this->products->whereIn('sub_category_id', $subcategories);
+            $subcategories = Category::whereIn('category_id', explode(',', request('category')))->get()->modelKeys();
+            $this->products->whereIn('category_id', $subcategories);
         }
     }
 
     public function filterBySubCategory()
     {
         if (request('subcategory')) {
-            $this->products->whereIn('sub_category_id', explode(',', request('subcategory')));
+            $this->products->whereIn('category_id', explode(',', request('subcategory')));
         }
     }
 

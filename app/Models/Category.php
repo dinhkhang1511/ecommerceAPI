@@ -8,15 +8,20 @@ class Category extends Model
 {
     protected $guarded = [];
 
-    public function subcategories()
-    {
-        return $this->hasMany('App\Models\SubCategory');
+    // Each category may have one parent
+    public function parent() {
+        return $this->belongsTo(static::class, 'category_id');
+    }
+
+    // Each category may have multiple children
+    public function children() {
+        return $this->hasMany(static::class, 'category_id');
     }
 
     public function products()
     {
-        $subcategories = SubCategory::whereIn('category', request('category'))->modelKeys();
-        return Product::with('images')->whereIn('sub_category_id', $subcategories)->get();
+        $subcategories = Category::whereIn('category', request('category'))->modelKeys();
+        return Product::with('images')->whereIn('category_id', $subcategories)->get();
     }
 
     public function setImagePathAttribute()

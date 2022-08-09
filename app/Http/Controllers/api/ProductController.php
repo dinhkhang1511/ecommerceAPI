@@ -98,10 +98,10 @@ class ProductController extends Controller
         });
 
         $categories = Cache::remember('categories_limit_3', now()->addMinutes(10), function () {
-            return Category::inRandomOrder()->limit(3)->get();
+            return Category::inRandomOrder()->limit(3)->where('category_id',NULL)->get();
         });
 
-        $album = Album::display()->first()->load('images');
+        // $album = Album::display()->first()->load('images');
 
         $payload = new stdClass();
         $payload->bestSellers = $bestSellers;
@@ -109,8 +109,7 @@ class ProductController extends Controller
         $payload->hotSales = $hotSales;
         $payload->blogs = $blogs;
         $payload->categories = $categories;
-        $payload->album = $album;
-
+        // $payload->album = $album;
         return response()->json($payload);
 
 

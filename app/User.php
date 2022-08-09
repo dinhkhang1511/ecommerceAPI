@@ -35,9 +35,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany('App\Models\Role');
+        return $this->belongsTo('App\Models\Role');
     }
 
     public function province()
@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->roles->pluck('name')->contains('Admin');
+        return $this->role->pluck('name')->contains('Admin');
     }
 
     public function setAvatarAttribute()

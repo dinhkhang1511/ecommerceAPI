@@ -25,9 +25,9 @@ class Product extends Model
                     ->where('product_quantity', '>', 0);
     }
 
-    public function subCategory()
+    public function category()
     {
-        return $this->belongsTo('App\Models\SubCategory');
+        return $this->belongsTo('App\Models\Category');
     }
 
     //lấy attributes có product_quantity > 0
@@ -113,7 +113,7 @@ class Product extends Model
 
     public function getRelatedAttribute()
     {
-        return $this->where('sub_category_id', $this->sub_category_id)
+        return $this->where('category_id', $this->category_id)
             ->active()
             ->where('id', '!=', $this->id)
             ->with('attributes.images',)

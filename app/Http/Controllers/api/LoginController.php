@@ -26,7 +26,7 @@ class LoginController extends Controller
             if ($user && Hash::check($password, $user->password))
             {
                 $data = $user->toArray();
-                $data['roles'] = $user->roles->pluck('name')->toArray(); // get roles of user
+                $data['roles'] = $user->role->pluck('name')->toArray(); // get roles of user
                 $token = JWT::encode($data, $this->api_key, $this->hash);
                 $payload = new stdClass();
                 $payload->token = $token;

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Services\ImageServices;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,10 +16,25 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return CategoryResource::collection(Category::all());
-
+        $query = Category::query();
+        if($request->has('parent'))
+        {
+            if($request->parent == 1)
+                $query->where('category_id',NULL);
+            else if($request->parent == 0)
+                $query->where('category_id',"!=", NULL);
+        }
+        if($request->has('limit'))
+        {
+           $limit = intval($request->limit);
+        }
+        else
+        {
+            $limit = 10;
+        }
+        return CategoryResource::collection($query->paginate($limit));
     }
 
     /**
@@ -39,7 +56,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        return  new CategoryResource(Category::find($id));
     }
 
     /**
@@ -49,10 +66,17 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryUpdateRequest $request, $id)
     {
-        //
+        $category = Category::find($id);
+        if (request()->has('image_path')) {
+            delete_file($category->image_path);
+        }
+        $category->update($request->validated());
+        return success('Updated successful',201);
     }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -60,8 +84,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        // ImageServices::deleteImages($category);
+        // $category->delete();
+        // return success('categories.index');
     }
 }

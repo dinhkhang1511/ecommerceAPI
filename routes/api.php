@@ -3,9 +3,11 @@
 use App\Http\CoUntrollers\LoginController;
 use App\Http\Resources\SubCategories;
 use App\Http\Resources\SubCategoryCollection;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,12 +53,14 @@ Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
 
 Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
-Route::apiResource('subCategories','\App\Http\Controllers\api\SubCategoryController');
+// Route::apiResource('subCategories','\App\Http\Controllers\api\SubCategoryController');
 
 Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
 Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');
 
 Route::apiResource('systemSettings','\App\Http\Controllers\api\SettingController');
+
+
 
 
 
