@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Requests\PromoRequest;
+use App\Http\Resources\PromoResource;
+use App\Models\Promo;
 use Illuminate\Http\Request;
 
-class ColorController extends Controller
+class PromoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +21,7 @@ class ColorController extends Controller
             $limit = request()->limit;
         else
             $limit = 10;
-        return ColorResource::collection(Color::paginate($limit));
+        return PromoResource::collection(Promo::paginate($limit));
     }
 
     /**
@@ -29,11 +30,10 @@ class ColorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PromoRequest $request)
     {
-        $data = request()->validate(['name' => 'required', 'code' => 'required']);
-        Color::create($data);
-        return success('Update Success');
+        $promo = Promo::create($request->all());
+        return success($promo);
     }
 
     /**
@@ -42,9 +42,9 @@ class ColorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Promo $promo)
     {
-        return new ColorResource(Color::find($id));
+        return new PromoResource($promo);
     }
 
     /**
@@ -54,11 +54,11 @@ class ColorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Color $color)
+    public function update(PromoRequest $request, Promo $promo)
     {
-        $data = $request->validate(['name' => 'required', 'code' => 'required']);
+        $data = $request->all();
 
-        $color->update($data);
+        $promo->update($data);
         return success('Update Success');
     }
 
@@ -68,9 +68,9 @@ class ColorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Promo $promo)
     {
-        $color = Color::find($id);
-        $color->delete();
+        $promo = $promo->delete();
+        return success('Deleted Successfully');
     }
 }

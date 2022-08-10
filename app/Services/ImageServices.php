@@ -19,7 +19,7 @@ class ImageServices
         } elseif ($item instanceof Size || $item instanceof Color) {
             return self::deleteImagesByAttribute($item);
         }
-        self::deleteImagesByProduct($item);
+        // self::deleteImagesByProduct($item);
     }
 
     public static function deleteImagesByProduct($product)
@@ -28,7 +28,7 @@ class ImageServices
         foreach ($product->attributes as $attribute) {
             ProductImage::deleteItem($attribute);
         }
-        
+
         foreach ($product->reviews as $review) {
             ReviewImage::deleteItem($review);
         }
@@ -52,9 +52,9 @@ class ImageServices
     public static function deleteImagesByCategory($category)
     {
         delete_file($category->image_path);
-        $category->load('subcategories');
-        foreach ($category->subcategories as $subCategory) {
-            self::deleteImagesBySubCategory($subCategory);
-        }
+        // $category->load('subcategories');
+        // foreach ($category->subcategories as $subCategory) {
+        //     self::deleteImagesBySubCategory($subCategory);
+        // }
     }
 }

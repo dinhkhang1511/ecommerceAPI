@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\ImageServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -43,9 +45,11 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        //
+        Category::create(['name' => $request->name,
+                          'image_path' => '']);
+        return success('categories.index');
     }
 
     /**
@@ -69,10 +73,11 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, $id)
     {
         $category = Category::find($id);
-        if (request()->has('image_path')) {
+        if (request()->has('base64_image')) {
             delete_file($category->image_path);
         }
-        $category->update($request->validated());
+        $category->update(['name' => $request->name,
+                           'image_path' => '']);
         return success('Updated successful',201);
     }
 
@@ -84,10 +89,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        // ImageServices::deleteImages($category);
-        // $category->delete();
-        // return success('categories.index');
+        $category = Category::find($id);
+
+        ImageServices::deleteImages($category);
+        $category->delete();
+        return success('Deleted successful',201);
     }
 }

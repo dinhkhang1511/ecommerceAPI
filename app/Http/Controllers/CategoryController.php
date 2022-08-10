@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Services\ImageServices;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -37,7 +38,7 @@ class CategoryController extends Controller
             delete_file($category->image_path);
         }
         $category->update($request->validated());
-        return success('categories.index');
+        return success();
     }
 
     public function destroy(Category $category)

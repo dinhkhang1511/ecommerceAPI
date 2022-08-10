@@ -26,8 +26,11 @@ class Category extends Model
 
     public function setImagePathAttribute()
     {
-        if (request()->has('image_path')) {
-            $path = store_file(request('image_path'), 'category');
+        if (request()->has('base64_image')) {
+            $name = time() . '.' . request()->extension;
+            $path = 'uploads/category/' . $name;
+            $imageBase64 = request()->base64_image;
+            file_put_contents(public_path($path), base64_decode($imageBase64));
             $this->attributes['image_path'] = $path;
         }
     }

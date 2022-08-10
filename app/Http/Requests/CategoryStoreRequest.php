@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CategoryStoreRequest extends FormRequest
 {
@@ -25,7 +27,15 @@ class CategoryStoreRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'image_path' => 'required|image',
+            // 'image_path' => 'required|image',
+            'base64_image' => '',
+            'extension'  => '',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+        throw new HttpResponseException(error($errors,402));
     }
 }

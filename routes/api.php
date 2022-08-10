@@ -53,7 +53,7 @@ Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
 
 Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
-// Route::apiResource('subCategories','\App\Http\Controllers\api\SubCategoryController');
+Route::apiResource('promos','\App\Http\Controllers\api\PromoController');
 
 Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
 Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');

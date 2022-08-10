@@ -2,18 +2,25 @@
 
 use App\Services\CartService;
 use Illuminate\Support\Facades\File;
-
-if (! function_exists('success')) {
-    function success($message = 'Operation Success', $status = 200)
+if (! function_exists('error')) {
+    function success($data = []  , $status = 200, $message = 'Operation Success')
     {
-        return response()->json($message,$status);
+        $payload = new stdClass();
+        $payload->status = $status;
+        $payload->message = $message;
+        $payload->data = $data;
+        return response()->json($payload,$status);
     }
 }
 
 if (! function_exists('error')) {
-    function error($message = 'Operation Fail', $status = 500)
+    function error($errors = [], $status = 500, $message = 'Operation Fail')
     {
-        return response()->json($message,$status);
+        $payload = new stdClass();
+        $payload->status = $status;
+        $payload->message = $message;
+        $payload->errors = $errors;
+        return response()->json($payload, $status);
     }
 }
 
