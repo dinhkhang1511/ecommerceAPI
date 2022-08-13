@@ -17,10 +17,8 @@ class SizeController extends Controller
      */
     public function index()
     {
-        if(request()->has('limit'))
-            $limit = request()->limit;
-        else
-            $limit = 10;
+        $limit = request('limit', 10);
+
         return SizeResource::collection(Size::paginate($limit));
     }
 
@@ -33,6 +31,7 @@ class SizeController extends Controller
     public function store(SizeRequest $request)
     {
         $size = Size::create($request->all());
+
         return success($size);
     }
 
@@ -57,8 +56,8 @@ class SizeController extends Controller
     public function update(SizeRequest $request,Size $size)
     {
         $data = $request->all();
-
         $size->update($data);
+
         return success('Update Success');
     }
 
@@ -72,5 +71,7 @@ class SizeController extends Controller
     {
         $size = Size::find($id);
         $size->delete();
+
+        return success();
     }
 }

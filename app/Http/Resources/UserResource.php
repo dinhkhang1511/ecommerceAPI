@@ -27,8 +27,8 @@ class UserResource extends JsonResource
             'ward_id' =>$this->ward_id,
             'phone' =>$this->phone,
             'avatar' =>$this->avatar,
-            'created_at' => $this->created_at->format('d F, Y'),
-            'updated_at' => $this->updated_at->format('d F, Y')
+            'created_at' => $this->created_at ? $this->created_at->format('d F, Y') : null,
+            'updated_at' => $this->updated_at ? $this->updated_at->format('d F, Y') : null
         ];
     }
 }

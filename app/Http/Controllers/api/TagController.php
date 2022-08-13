@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PromoRequest;
-use App\Http\Resources\PromoResource;
-use App\Models\Promo;
+use App\Http\Resources\TagResource;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
-class PromoController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +16,11 @@ class PromoController extends Controller
      */
     public function index()
     {
-        $limit = request('limit', 10);
-        return PromoResource::collection(Promo::paginate($limit));
+        $query = Tag::query();
+        $query->latest();
+        $limit = request('limit',10);
+
+        return TagResource::collection($query->paginate($limit));
     }
 
     /**
@@ -27,10 +29,12 @@ class PromoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PromoRequest $request)
+    public function store(Request $request)
     {
-        $promo = Promo::create($request->all());
-        return success($promo);
+        $data = $request->validate(['name' => 'required']);
+        $tag = Tag::create($data);
+
+        return success($tag);
     }
 
     /**
@@ -39,9 +43,9 @@ class PromoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Promo $promo)
+    public function show(Tag $tag)
     {
-        return new PromoResource($promo);
+        return new TagResource($tag);
     }
 
     /**
@@ -51,11 +55,11 @@ class PromoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PromoRequest $request, Promo $promo)
+    public function update(Request $request,Tag $tag)
     {
-        $data = $request->all();
+        $data = $request->validate(['name' => 'required']);
+        $tag->update($data);
 
-        $promo->update($data);
         return success('Update Success');
     }
 
@@ -65,9 +69,10 @@ class PromoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Promo $promo)
+    public function destroy(Tag $tag)
     {
-        $promo = $promo->delete();
-        return success('Deleted Successfully');
+        $tag->delete();
+
+        return success();
     }
 }

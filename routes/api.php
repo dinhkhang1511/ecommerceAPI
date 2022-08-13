@@ -26,39 +26,45 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // Route::get('')
-
+// * -ROUTE FOR CLIENTS NON LOGIN----------------------------------
 Route::get('home','\App\Http\Controllers\api\ProductController@homePage');
 
 Route::get('getProduct','\App\Http\Controllers\api\ShopController@showProduct');
 Route::get('getRelatedProduct','\App\Http\Controllers\api\ShopController@showRelatedProduct');
 
-
+// * AUTH ROUTE
 Route::post('login','\App\Http\Controllers\api\LoginController@login');
 Route::post('authenticate','\App\Http\Controllers\api\LoginController@verifyAuthen');
-
 Route::get('filter', 'ShopController@filter');
 
-Route::get('getUser','\App\Http\Controllers\api\UserController@getDetails');
+// * ROUTE FOR USER HAS LOGIN--------------------------------
+Route::middleware('auth.api')->group(function() {
+    Route::get('getUser','\App\Http\Controllers\api\UserController@getDetails');
+    Route::apiResource('users','\App\Http\Controllers\api\UserController');
+    Route::get('users/wishlist/{id}','\App\Http\Controllers\api\UserController@getUserWishlist');
 
-Route::apiResource('users','\App\Http\Controllers\api\UserController');
-Route::get('users/wishlist/{id}','\App\Http\Controllers\api\UserController@getUserWishlist');
+    Route::apiResource('products','\App\Http\Controllers\api\ProductController');
 
-Route::apiResource('products','\App\Http\Controllers\api\ProductController');
+    Route::apiResource('tags','\App\Http\Controllers\api\TagController');
 
-Route::apiResource('categories','\App\Http\Controllers\api\CategoryController');
+    Route::apiResource('categories','\App\Http\Controllers\api\CategoryController');
 
-Route::apiResource('colors','\App\Http\Controllers\api\ColorController');
+    Route::apiResource('colors','\App\Http\Controllers\api\ColorController');
 
-Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
+    Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
 
-Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
+    Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
-Route::apiResource('promos','\App\Http\Controllers\api\PromoController');
+    Route::apiResource('promos','\App\Http\Controllers\api\PromoController');
 
-Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
-Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');
+    Route::apiResource('blogs','\App\Http\Controllers\api\BlogController');
+    Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');
+    Route::apiResource('systemSettings','\App\Http\Controllers\api\SettingController');
 
-Route::apiResource('systemSettings','\App\Http\Controllers\api\SettingController');
+});
+
+
+
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Album;
 use App\Models\Blog;
@@ -21,7 +22,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductResource::collection(Product::all());
+        $query = Product::query();
+        $limit = request('limit',10);
+
+        return ProductResource::collection($query->paginate($limit));
     }
 
     /**
@@ -30,9 +34,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        return response()->json($request->all());
     }
 
     /**
@@ -41,9 +45,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($param,Request $request)
+    public function show($id,Request $request)
     {
-        if($param === 'find')
+        if($id === 'find')
         {
             // $arrId = explode(',',$request->product_id); // Dùng đề test postman
             $arrId =$request->product_id;
@@ -51,6 +55,14 @@ class ProductController extends Controller
             $payload = new stdClass();
             $payload->products = $products;
             return response()->json($payload);
+        }
+        else
+        {
+            $product = Product::find($id);
+            if($product)
+                return new ProductResource($product->load(['orders', 'sizes', 'colors']));
+
+            return error('Product Not Found',404);
         }
 
     }

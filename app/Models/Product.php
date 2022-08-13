@@ -130,9 +130,9 @@ class Product extends Model
         return $this->images->first()->path ?? '';
     }
 
-    public function getCategoryAttribute()
+    public function getParentCategoryAttribute()
     {
-        return $this->subCategory->category;
+        return $this->category->parent;
     }
 
     public function getAfterDiscountAttribute()

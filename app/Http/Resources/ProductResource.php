@@ -20,10 +20,16 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'quantity' => $this->quantity,
+            'first_image' => $this->first_image,
             'discount' => $this->discount,
-            'description' => substr(strip_tags($this->description),0,50), // Convert html to plain text and substring
-            'sub_category' => $this->subCategory,
-            'rating' => $this->rating
+            'after_discount' => $this->after_discount,
+            'description' => $this->when($request->routeIs('products.show'), $this->description, substr(strip_tags($this->description),0,50)), // Convert html to plain text and substring
+            'category' => $this->category->name,
+            'parent_category' => $this->parentCategory->name,
+            'rating' => $this->rating,
+            'orders' => $this->whenLoaded('orders'),
+            'sizes' => SizeResource::collection($this->whenLoaded('sizes')),
+            'colors' => ColorResource::collection($this->whenLoaded('colors')),
         ];
     }
 }

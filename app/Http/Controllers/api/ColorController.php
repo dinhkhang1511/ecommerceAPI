@@ -16,10 +16,7 @@ class ColorController extends Controller
      */
     public function index()
     {
-        if(request()->has('limit'))
-            $limit = request()->limit;
-        else
-            $limit = 10;
+        $limit = request('limit', 10);
         return ColorResource::collection(Color::paginate($limit));
     }
 
