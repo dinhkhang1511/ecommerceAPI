@@ -44,9 +44,9 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Blog $blog)
     {
-        return new BlogResource(Blog::find($id));
+        return new BlogResource($blog);
     }
 
     public function related($id)
@@ -55,14 +55,26 @@ class BlogController extends Controller
         return  BlogResource::collection(Blog::relatedPost($blog));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(BlogUpdateRequest $request, $id)
+    // /**
+    //  * Update the specified resource in storage.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function update(BlogUpdateRequest $request, $id)
+    // {
+    //     $blog = Blog::find($id);
+    //     if (request()->has('image_path')) {
+    //         delete_file($blog->image_path);
+    //     }
+
+    //     $blog->update($request->validated());
+    //     $blog->tags()->sync($request->tags);
+    //     return success($blog);
+    // }
+
+    public function updateBlog(BlogUpdateRequest $request, $id)
     {
         $blog = Blog::find($id);
         if (request()->has('image_path')) {
@@ -71,7 +83,7 @@ class BlogController extends Controller
 
         $blog->update($request->validated());
         $blog->tags()->sync($request->tags);
-        return success('blogs.index');
+        return success($blog);
     }
 
     /**

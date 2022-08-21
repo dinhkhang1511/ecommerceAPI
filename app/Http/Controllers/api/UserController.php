@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\User;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class UserController extends Controller
@@ -20,7 +23,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        $limit = request('limit',10);
+        if( $limit == 'all')
+            return UserResource::collection(User::latest()->get());
+        else
+            return UserResource::collection(User::latest()->paginate($limit));
     }
 
     /**
@@ -62,7 +69,16 @@ class UserController extends Controller
         return error('Not found',404);
     }
 
-
+    public function getUserByMonth()
+    {
+        $month = request('m', date('m'));
+        $users = UserResource::collection(User::whereMonth('created_at', $month)
+        ->whereYear('created_at', date('Y'))
+        ->customer()
+        ->latest()
+        ->get());
+        return $users;
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -81,9 +97,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return success();
     }
 
     public function getDetails(Request $request)
@@ -98,7 +116,11 @@ class UserController extends Controller
                 $token = $request->header('access_token');
                 $payload = JWT::decode($token,new Key($this->api_key,$this->hash));
                 $user = User::find($payload->id);
-                if(isset($fields) && !empty($fields[0]))
+                if($user->role_id == 1 && $request->has('user_id'))
+                {
+                    $user = User::find($request->user_id);
+                }
+                if(isset($fields) && !empty($fields[0]) && $user)
                     $user = $user->load($fields);
 
                 return response()->json($user);
@@ -106,10 +128,50 @@ class UserController extends Controller
             }
             catch(Exception $ex)
             {
-                return response($ex->getMessage(),401);
+                Log::info($ex->getMessage());
+                return error('Invalid Token',401);
             }
         }
-        return response('Invalid Token',401);
+        return error('Invalid Token',401);
 
+    }
+
+    // public function checkPassword(Request $request)
+    // {
+    //     $token = $request->header('access_token');
+    //     dd($token);
+    //     $user = JWT::decode($token,new Key(config('api.secret_key'),config('api.hash')));
+    //     $user = User::find($user->id);
+    //     if($user)
+    //     {
+    //         $user->makeVisible('password');
+
+    //         return Hash::check($request->password, $user->password) ? success('Password valid') : error('Password is invalid', 400);
+    //     }
+
+    //     return error('User not found', 404);
+    // }
+
+    public function updatePassword(PasswordUpdateRequest $request)
+    {
+        $token = $request->header('access_token');
+        $user = JWT::decode($token,new Key(config('api.secret_key'),config('api.hash')));
+        $user = User::find($user->id);
+        if($user && $request->has('new_password'))
+        {
+            $user->update(['password' => Hash::make($request->new_password)]);
+            return success();
+        }
+
+        return error('User not found', 404);
+    }
+
+    public function setAdmin(Request $request, $id)
+    {
+        $user = User::find($id);
+        if($user->role_id != 1)
+            $user->update(['role_id' => 1]);
+
+        return success();
     }
 }

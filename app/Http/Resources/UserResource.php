@@ -14,7 +14,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $this->wrap('user');
+        $this->wrap('users');
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -27,6 +27,7 @@ class UserResource extends JsonResource
             'ward_id' =>$this->ward_id,
             'phone' =>$this->phone,
             'avatar' =>$this->avatar,
+            'role_id' => $this->role_id,
             'created_at' => $this->created_at ? $this->created_at->format('d F, Y') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('d F, Y') : null
         ];

@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\MatchOldPassword;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PasswordUpdateRequest extends FormRequest
 {
@@ -28,5 +30,11 @@ class PasswordUpdateRequest extends FormRequest
             'current_password' => ['required', new MatchOldPassword],
             'new_password' => ['required'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+        throw new HttpResponseException(error($errors,402));
     }
 }

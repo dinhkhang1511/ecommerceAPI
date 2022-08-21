@@ -17,9 +17,11 @@ class SizeController extends Controller
      */
     public function index()
     {
-        $limit = request('limit', 10);
-
-        return SizeResource::collection(Size::paginate($limit));
+        $limit = request('limit',10);
+        if($limit == 'all')
+            return SizeResource::collection(Size::all());
+        else
+            return SizeResource::collection(Size::paginate($limit));
     }
 
     /**

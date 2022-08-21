@@ -28,15 +28,13 @@ class CategoryController extends Controller
             else if($request->parent == 0)
                 $query->where('category_id',"!=", NULL);
         }
-        if($request->has('limit'))
-        {
-           $limit = intval($request->limit);
-        }
-        else
-        {
-            $limit = 10;
-        }
+
+        if($request->limit == 'all')
+            return CategoryResource::collection($query->get());
+
+        $limit = request('limit', 10) ;
         return CategoryResource::collection($query->paginate($limit));
+
     }
 
     /**

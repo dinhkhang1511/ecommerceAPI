@@ -16,12 +16,7 @@ class ViewedProduct extends Model
 
     public static function view($product)
     {
-        if (auth()->check()) {
-            ViewedProduct::updateOrCreate(['user_id' =>  auth()->id(), 'product_id' => $product->id])->increment('view_numbers');
-        }
-        else
-        {
-            ViewedProduct::updateOrCreate(['user_id' =>  null, 'product_id' => $product->id])->increment('view_numbers');
-        }
+        if ($user_id = request()->header('user_id'))
+            ViewedProduct::updateOrCreate(['user_id' =>  $user_id, 'product_id' => $product->id])->increment('view_numbers');
     }
 }

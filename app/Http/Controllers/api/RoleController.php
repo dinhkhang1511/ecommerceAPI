@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Resources\RoleResource;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class ColorController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +16,7 @@ class ColorController extends Controller
      */
     public function index()
     {
-        $limit = request('limit',10);
-        if($limit == 'all')
-            return ColorResource::collection(Color::all());
-        else
-            return ColorResource::collection(Color::paginate($limit));
+        return RoleResource::collection(Role::latest()->paginate(10));
     }
 
     /**
@@ -31,9 +27,14 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
-        $data = request()->validate(['name' => 'required', 'code' => 'required']);
-        Color::create($data);
-        return success('Update Success');
+        $data = $request->validate(['name' => 'required']);
+        if(Role::create($data))
+        {
+            return success();
+        }
+
+        return error();
+
     }
 
     /**
@@ -44,33 +45,36 @@ class ColorController extends Controller
      */
     public function show($id)
     {
-        return new ColorResource(Color::find($id));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Role $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Color $color)
+    public function update(Request $request, Role $role)
     {
-        $data = $request->validate(['name' => 'required', 'code' => 'required']);
+        $data = $request->validate(['name' => 'required']);
+        if($role->update($data))
+            return success();
 
-        $color->update($data);
-        return success('Update Success');
+        return error();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Role $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        $color = Color::find($id);
-        $color->delete();
+        if($role->delete())
+            return success();
+
+        return error();
     }
 }

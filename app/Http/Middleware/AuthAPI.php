@@ -20,7 +20,7 @@ class AuthAPI
      */
     public function handle($request, Closure $next)
     {
-        if($request->method != 'GET')
+        if($request->isMethod('GET'))
             return $next($request);
 
         if($request->hasHeader('access_token') )

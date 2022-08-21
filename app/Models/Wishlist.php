@@ -15,7 +15,7 @@ class Wishlist extends Model
 
     public function isExists()
     {
-        return WishList::whereUserId(auth()->id())
+        return WishList::whereUserId(request()->user_id)
                 ->whereProductId(request('product_id'))->first() ? true : false;
     }
 }

@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->role->pluck('name')->contains('Admin');
+        return $this->role_id == 1;
     }
 
     public function setAvatarAttribute()
@@ -93,10 +93,6 @@ class User extends Authenticatable
 
     public function scopeCustomer($query)
     {
-        return $query->whereNotIn('id', function ($item) {
-            $item->select('id')
-                ->from('role_user')
-                ->get();
-        });
+        return $query->where('role_id', '<>', '1');
     }
 }

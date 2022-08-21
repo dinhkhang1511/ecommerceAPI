@@ -15,10 +15,14 @@ class PromoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $limit = request('limit', 10);
-        return PromoResource::collection(Promo::paginate($limit));
+        $query = Promo::query();
+        if($request->limit == 'all')
+            return PromoResource::collection($query->get());
+        $limit = request('limit', 10) ;
+
+        return PromoResource::collection($query->paginate($limit));
     }
 
     /**
@@ -69,5 +73,12 @@ class PromoController extends Controller
     {
         $promo = $promo->delete();
         return success('Deleted Successfully');
+    }
+
+    public function findPromo()
+    {
+        $code = request()->code;
+        $promo = Promo::where('code', $code)->first();
+        return response()->json($promo);
     }
 }

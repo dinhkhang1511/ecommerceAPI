@@ -1,4 +1,6 @@
 <?php
+
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -84,5 +86,6 @@ Route::group(['middleware'=>'HtmlMinifier'], function () {
     // Auth::routes();
     Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 });
+
 
 

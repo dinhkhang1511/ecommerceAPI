@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Requests\ReviewRequest;
+use App\Http\Resources\ReviewResource;
+use App\Models\Review;
+use App\Models\ReviewImage;
 use Illuminate\Http\Request;
 
-class ColorController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +18,16 @@ class ColorController extends Controller
      */
     public function index()
     {
-        $limit = request('limit',10);
-        if($limit == 'all')
-            return ColorResource::collection(Color::all());
-        else
-            return ColorResource::collection(Color::paginate($limit));
+        $month = request('m', date('m'));
+
+        $query = Review::query();
+        $query = $query->whereMonth('created_at', $month)
+        ->whereYear('created_at', date('Y'));
+
+        if($limit = request('limit'))
+            $query->limit($limit);
+
+        return ReviewResource::collection($query->latest()->get()->load('user'));
     }
 
     /**
@@ -29,11 +36,15 @@ class ColorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request)
     {
-        $data = request()->validate(['name' => 'required', 'code' => 'required']);
-        Color::create($data);
-        return success('Update Success');
+        $review = Review::updateOrCreate(
+                ['product_id' => $request->product_id, 'user_id' => $request->user_id],
+                $request->validated()
+            );
+            ReviewImage::deleteItem($review);
+            ReviewImage::storeItem($review, request('images', []));
+            return success();
     }
 
     /**
@@ -44,7 +55,7 @@ class ColorController extends Controller
      */
     public function show($id)
     {
-        return new ColorResource(Color::find($id));
+        //
     }
 
     /**
@@ -54,12 +65,9 @@ class ColorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Color $color)
+    public function update(Request $request, $id)
     {
-        $data = $request->validate(['name' => 'required', 'code' => 'required']);
-
-        $color->update($data);
-        return success('Update Success');
+        //
     }
 
     /**
@@ -70,7 +78,6 @@ class ColorController extends Controller
      */
     public function destroy($id)
     {
-        $color = Color::find($id);
-        $color->delete();
+        //
     }
 }

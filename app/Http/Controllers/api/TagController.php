@@ -19,8 +19,11 @@ class TagController extends Controller
         $query = Tag::query();
         $query->latest();
         $limit = request('limit',10);
+        if($limit == 'all')
+            return TagResource::collection($query->get());
+        else
+            return TagResource::collection($query->paginate($limit));
 
-        return TagResource::collection($query->paginate($limit));
     }
 
     /**

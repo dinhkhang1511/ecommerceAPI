@@ -2,6 +2,9 @@
 
 namespace App\Rules;
 
+use App\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -26,7 +29,10 @@ class MatchOldPassword implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Hash::check($value, auth()->user()->password);
+        $token = request()->header('access_token');
+        $user = JWT::decode($token, new Key(config('api.secret_key'), config('api.hash')));
+        $user = User::find($user->id)->makeVisible('password');
+        return Hash::check($value, $user->password);
     }
 
     /**

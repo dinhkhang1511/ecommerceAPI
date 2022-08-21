@@ -8,6 +8,8 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    // protected $attributes = ['status_color'];
+
     public function details()
     {
         return $this->hasMany('App\Models\OrderDetail');

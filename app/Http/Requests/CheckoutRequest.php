@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CheckoutRequest extends FormRequest
 {
@@ -36,5 +38,11 @@ class CheckoutRequest extends FormRequest
             'price' => 'required|numeric',
             'discount' => 'required|numeric',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+        throw new HttpResponseException(error($errors,402));
     }
 }

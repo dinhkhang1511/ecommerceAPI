@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AllowCors;
 use App\Http\Middleware\AuthAPI;
 use App\Http\Middleware\CheckStaff;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -39,11 +40,13 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // AllowCors::class
         ],
 
         'api' => [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // AllowCors::class
         ],
     ];
 

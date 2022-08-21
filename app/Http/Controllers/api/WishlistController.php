@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Models\Wishlist;
+use App\User;
 use Illuminate\Http\Request;
 
-class ColorController extends Controller
+class WishlistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +16,7 @@ class ColorController extends Controller
      */
     public function index()
     {
-        $limit = request('limit',10);
-        if($limit == 'all')
-            return ColorResource::collection(Color::all());
-        else
-            return ColorResource::collection(Color::paginate($limit));
+        //
     }
 
     /**
@@ -31,9 +27,12 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
-        $data = request()->validate(['name' => 'required', 'code' => 'required']);
-        Color::create($data);
-        return success('Update Success');
+        $wishlist = new Wishlist();
+        if (!$wishlist->isExists()) {
+            User::find($request->user_id)->wishlist()->create(['product_id' => request('product_id')]);
+            return success('Added to wishlist');
+        }
+        return success('Already in wishlist');
     }
 
     /**
@@ -44,7 +43,7 @@ class ColorController extends Controller
      */
     public function show($id)
     {
-        return new ColorResource(Color::find($id));
+        //
     }
 
     /**
@@ -54,12 +53,9 @@ class ColorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Color $color)
+    public function update(Request $request, $id)
     {
-        $data = $request->validate(['name' => 'required', 'code' => 'required']);
-
-        $color->update($data);
-        return success('Update Success');
+        //
     }
 
     /**
@@ -70,7 +66,6 @@ class ColorController extends Controller
      */
     public function destroy($id)
     {
-        $color = Color::find($id);
-        $color->delete();
+        //
     }
 }
