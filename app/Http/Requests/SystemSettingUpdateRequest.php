@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SystemSettingUpdateRequest extends FormRequest
 {
@@ -36,5 +38,11 @@ class SystemSettingUpdateRequest extends FormRequest
             'ward_id' => 'nullable',
             'address' => 'nullable',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+        throw new HttpResponseException(error($errors,402));
     }
 }

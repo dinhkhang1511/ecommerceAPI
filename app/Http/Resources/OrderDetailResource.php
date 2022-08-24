@@ -22,7 +22,7 @@ class OrderDetailResource extends JsonResource
             'product' => Product::find($this->product_id)->only('name'),
             'quantity' => $this->quantity,
             'discount' => $this->discount,
-            'total' => $this->total,
+            'price' => $this->price,
             'size' => ['id' => $this->size_id,
                        'name' => $this->size->name],
             'color' => ['id' => $this->color_id,

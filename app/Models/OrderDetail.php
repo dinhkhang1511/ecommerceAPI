@@ -33,12 +33,15 @@ class OrderDetail extends Model
                 'size_id' => request('size_id')[$index],
                 'color_id' => request('color_id')[$index]
             ]);
-            
+
+            $price = ((int)request('total')[$index] / (int)request('quantity')[$index]);
+
             $data = [
                 'product_id' => $value,
                 'quantity' => request('quantity')[$index],
                 'discount' => $product->discount,
-                'total' => request('total')[$index],
+                // 'total' => request('total')[$index],
+                'price' => $price,
                 'size_id' => request('size_id')[$index],
                 'color_id' => request('color_id')[$index],
             ];

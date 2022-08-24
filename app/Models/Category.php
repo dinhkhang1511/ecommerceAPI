@@ -34,4 +34,15 @@ class Category extends Model
             $this->attributes['image_path'] = $path;
         }
     }
+
+    // public function getCreatedAtAttribute($value)
+    // {
+    //     return date('y-m-d', strtotime($value));
+    // }
+
+    // public function getUpdatedAtAttribute($value)
+    // {
+    //     return date('y-m-d', strtotime($value));
+    // }
+
 }

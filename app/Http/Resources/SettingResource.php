@@ -26,7 +26,9 @@ class SettingResource extends JsonResource
             'phone'         => $this->phone,
             'address'       => $this->address,
             'province_id'   => $this->province_id,
+            'province'      => $this->province,
             'district_id'   => $this->district_id,
+            'district'      => $this->district,
             'ward_id'       => $this->ward_id,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SystemSettingUpdateRequest;
 use App\Http\Resources\SettingResource;
 use App\Models\SystemSetting;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return new SettingResource(SystemSetting::first());
+        return new SettingResource(SystemSetting::first()->load('province.districts','district.wards'));
     }
 
     /**
@@ -48,9 +49,13 @@ class SettingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SystemSettingUpdateRequest $request, $id)
     {
-        //
+        $setting = SystemSetting::all()->first();
+
+        $setting->update($request->validated());
+
+        return success();
     }
 
     /**

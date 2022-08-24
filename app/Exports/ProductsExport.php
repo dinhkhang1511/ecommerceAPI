@@ -7,8 +7,10 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class ProductsExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
+class ProductsExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithColumnFormatting
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -20,7 +22,10 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, Shoul
             'price',
             'quantity',
             'discount',
-            'category_id'
+            'category_id',
+            'created_at',
+            'updated_at'
+
         )->latest()->get();
     }
 
@@ -32,13 +37,23 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, Shoul
             $item->quantity,
             $item->discount,
             $item->category->name,
+            Date::dateTimeToExcel($item->created_at),
+            Date::dateTimeToExcel($item->updated_at)
         ] ;
     }
 
     public function headings(): array
     {
         return [
-            'NAME', 'PRICE', 'QUANTITY', 'DISCOUNT', 'CATEGORY'
+            'NAME', 'PRICE', 'QUANTITY', 'DISCOUNT', 'CATEGORY', 'CREATED_AT', 'UPDATED_AT'
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'F' => 'yyyy-mm-dd hh:MM:ss',
+            'G' => 'yyyy-mm-dd hh:MM:ss',
         ];
     }
 }

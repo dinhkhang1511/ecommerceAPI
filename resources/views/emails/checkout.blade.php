@@ -2,7 +2,7 @@
 # Order Confirmation
 
 Hey {{ $order->customer_name }}, <br>
-We've got your order! 
+We've got your order!
 
 <center>
 # ORDER NO. {{ $order->order_no }}
@@ -10,12 +10,13 @@ We've got your order!
 
 #### ITEMS ORDERED
 @component('mail::table')
-| Product                                                   | Size                          | Quantity                     | Price  |
-| --------------------------------------------------------- |:-----------------------------:| ----------------------------:| ------:|
+| Product                                                   | Size                          | Quantity        | Price       | Total  |
+| --------------------------------------------------------- |:-----------------------------:| ----------------|------------:| ------:|
 @foreach ($order->details as $index=>$item)
-| {{ $item->product->name }} - {{ $item->color->name }}      | {{ $item->size->name }}  | {{ $item->quantity }}     | {{ money($item->product->after_discount * $item->quantity) }}      |
+| {{ $item->product->name }} - {{ $item->color->name }}      | {{ $item->size->name }}      | {{ $item->quantity }}| {{money($item->price)}}     | {{ money($item->price * $item->quantity) }}      |
 @endforeach
-|                                                            |                          | **Total**                  | {{ money($order->price) }}                                         | 
+|                                                            |                              | **Discount**                  | {{ $order->discount . '%' }}                                         |
+|                                                            |                              | **Total**                  | {{ money($order->price) }}                                         |
 @endcomponent
 
 #### BILLING INFO <br>

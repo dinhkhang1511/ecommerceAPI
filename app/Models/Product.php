@@ -52,6 +52,11 @@ class Product extends Model
         return $this->hasMany('App\Models\OrderDetail');
     }
 
+    public function viewed_products()
+    {
+        return $this->hasMany('App\Models\ViewedProduct');
+    }
+
     /*  *****************************QUERY SCOPE***************************** */
 
     public function scopeActive($query)

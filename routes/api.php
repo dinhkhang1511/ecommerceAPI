@@ -4,8 +4,11 @@ use App\Http\CoUntrollers\LoginController;
 use App\Http\Resources\SubCategories;
 use App\Http\Resources\SubCategoryCollection;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\SubCategory;
+use App\Notifications\NewOrder;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -68,7 +71,6 @@ Route::middleware('auth.api')->group(function() {
 
     Route::apiResource('sizes','\App\Http\Controllers\api\SizeController');
 
-    Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
     Route::apiResource('promos','\App\Http\Controllers\api\PromoController');
     Route::get('find-promo','\App\Http\Controllers\api\PromoController@findPromo');
@@ -104,9 +106,11 @@ Route::prefix('locations')->group(function(){
     Route::get('wards','\App\Http\Controllers\api\LocationController@getWards');
 });
 
-Route::post('test',function(Request $request){
-    Log::info($request->all());
-    return response()->json($request->all());
+Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
+
+
+Route::get('test',function(Request $request){
+    User::find(1)->notify(new NewOrder(Order::first()));
 });
 
 

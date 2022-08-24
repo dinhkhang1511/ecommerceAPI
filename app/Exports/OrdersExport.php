@@ -7,8 +7,10 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping
+class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping, WithColumnFormatting
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -25,7 +27,9 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             'district_id',
             'ward_id',
             'price',
-            'status'
+            'status',
+            'created_at',
+            'updated_at'
         )->latest()->get();
     }
 
@@ -42,13 +46,23 @@ class OrdersExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             $item->ward->name,
             $item->price,
             $item->status,
+            Date::dateTimeToExcel($item->created_at),
+            Date::dateTimeToExcel($item->updated_at)
         ] ;
     }
 
     public function headings(): array
     {
         return [
-            'ORDER NO', 'CUSTOMER NAME', 'CUSTOMER PHONE', 'CUSTOMER EMAIL', 'CUSTOMER ADDRESS', 'PROVINCE', 'DISTRICT', 'WARD', 'PRICE', 'STATUS'
+            'ORDER NO', 'CUSTOMER NAME', 'CUSTOMER PHONE', 'CUSTOMER EMAIL', 'CUSTOMER ADDRESS', 'PROVINCE', 'DISTRICT', 'WARD', 'PRICE', 'STATUS', 'CREATED_AT', 'UPDATED_AT'
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'K' => 'yyyy-mm-dd hh:MM:ss',
+            'L' => 'yyyy-mm-dd hh:MM:ss',
         ];
     }
 }
