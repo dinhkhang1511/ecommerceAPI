@@ -35,7 +35,7 @@ class ShopService
     {
         if (request('category')) {
             $subcategories = Category::whereIn('category_id', explode(',', request('category')))->get()->modelKeys();
-            $this->products->whereIn('category_id', $subcategories);
+            $this->products->whereIn('category_id', $subcategories)->orWhere('category_id',request('category'));
         }
     }
 
