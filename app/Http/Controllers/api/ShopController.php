@@ -22,12 +22,15 @@ class ShopController extends Controller
 
                 ViewedProduct::view($product);
                 //xứ lý problems n + 1
-                if($request->hasHeader('user_id'))
+                if($request->hasHeader('user_id') && $request->header('user_id'));
                 {
                     $user = User::find($request->header('user_id'));
-                    $recentViewProducts = $user->viewed_products->load('product');
-                    $recentViewProducts = $recentViewProducts->sortBy('updated_at')->reverse()
-                                          ->pluck('product')->where('id', '<>', $product->id)->take(8);
+                    if($user)
+                    {
+                        $recentViewProducts = $user->viewed_products->load('product');
+                        $recentViewProducts = $recentViewProducts->sortBy('updated_at')->reverse()
+                                              ->pluck('product')->where('id', '<>', $product->id)->take(8);
+                    }
                 }
 
                 $product->load(['attributes.images', 'reviews.images','reviews.user','attributes.color','attributes.size','category.parent']);

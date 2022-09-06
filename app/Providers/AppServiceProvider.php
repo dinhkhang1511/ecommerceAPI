@@ -33,41 +33,41 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        view()->composer('layouts.frontend.app', function ($view) {
-            $cart = session('cart', []);
-            $products = Product::find(array_keys($cart));
-            $amount = 0;
-            foreach ($products as $item) {
-                foreach (session('cart.'.$item->id) as $key=>$value) {
-                    $amount += $cart[$item->id][$key]['quantity'];
-                }
-            }
-            $view->with('cart_amount', $amount);
+        // view()->composer('layouts.frontend.app', function ($view) {
+        //     $cart = session('cart', []);
+        //     $products = Product::find(array_keys($cart));
+        //     $amount = 0;
+        //     foreach ($products as $item) {
+        //         foreach (session('cart.'.$item->id) as $key=>$value) {
+        //             $amount += $cart[$item->id][$key]['quantity'];
+        //         }
+        //     }
+        //     $view->with('cart_amount', $amount);
 
-            $subCategories = SubCategory::inRandomOrder()->limit(3)->get();
-            $view->with('sub_categories_footer', $subCategories);
-        });
+        //     $subCategories = SubCategory::inRandomOrder()->limit(3)->get();
+        //     $view->with('sub_categories_footer', $subCategories);
+        // });
 
-        view()->composer('layouts.*', function ($view) {
-            if (session()->has('success')) {
-                $view->with('success', session('success'));
-                session()->forget('success');
-            }
+        // view()->composer('layouts.*', function ($view) {
+        //     if (session()->has('success')) {
+        //         $view->with('success', session('success'));
+        //         session()->forget('success');
+        //     }
 
-            if (session()->has('error')) {
-                $view->with('error', session('error'));
-                session()->forget('error');
-            }
+        //     if (session()->has('error')) {
+        //         $view->with('error', session('error'));
+        //         session()->forget('error');
+        //     }
 
-            $view->with('setting', SystemSetting::all()->first());
-        });
+        //     $view->with('setting', SystemSetting::all()->first());
+        // });
 
-        view()->composer('auth.*', function ($view) {
-            $view->with('setting', SystemSetting::all()->first());
-        });
+        // view()->composer('auth.*', function ($view) {
+        //     $view->with('setting', SystemSetting::all()->first());
+        // });
 
-        view()->composer('layouts.backend.app', function ($view) {
-            $view->with('current_user', auth()->user()->load('unreadNotifications'));
-        });
+        // view()->composer('layouts.backend.app', function ($view) {
+        //     $view->with('current_user', auth()->user()->load('unreadNotifications'));
+        // });
     }
 }

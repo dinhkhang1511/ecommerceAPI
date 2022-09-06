@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\ResetPasswordMail;
 use App\User;
 use Exception;
 use Firebase\JWT\JWT;
@@ -12,6 +13,8 @@ use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use stdClass;
 
 class UserController extends Controller
@@ -164,6 +167,83 @@ class UserController extends Controller
         }
 
         return error('User not found', 404);
+    }
+
+    public function forgetPassword(Request $request)
+    {
+        $email = $request->email;
+        if($email && $user = User::where('email', $email)->first())
+        {
+            $token = Str::random(32);
+
+            $user->forget_password_token = $token;
+            $user->forget_password_token_expired = date('Y-m-d h:i:s',strtotime('+10 minutes'));
+            $user->save();
+            Mail::to($user->email)->queue(new ResetPasswordMail($token,$user));
+            return success();
+        }
+        return error('Email is not exist', 404);
+
+    }
+
+    public function checkToken(Request $request) // * Forget password
+    {
+        $data = explode('.', $request->token);
+        $token = $data[0];
+        $user_id = $data[1];
+
+        if($token && $user = User::find($user_id))
+        {
+
+            if(! ($token === $user->forget_password_token))
+            {
+                return error('Token invalid', 402);
+            }
+            else
+            {
+                if(now() > $user->forget_password_token_expired)
+                {
+                    return error('Token expired', 402);
+                }
+                else
+                    return success();
+            }
+        }
+
+        return error('Token invalid', 402);
+    }
+
+    public function resetPassword(Request $request) // * reset password
+    {
+        $data = explode('.', $request->token);
+        $token = $data[0];
+        $user_id = $data[1];
+
+        if($token && $user = User::find($user_id))
+        {
+            if(! $token === $user->forget_password_token)
+            {
+                return error('Token invalid', 402);
+            }
+            else
+            {
+                if(now() > $user->forget_password_token_expired)
+                {
+                    return error('Token expired', 402);
+                }
+                else
+                {
+                    if($request->password == $request->password_confirmation)
+                    {
+                        $user->password = Hash::make($request->password);
+                        $user->save();
+                        return success();
+                    }
+                }
+            }
+        }
+
+        return error('Token invalid', 402);
     }
 
     public function setAdmin(Request $request, $id)

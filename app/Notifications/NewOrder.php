@@ -55,7 +55,8 @@ class NewOrder extends Notification implements ShouldQueue
         return [
             'title' => 'New Order',
             'body' => 'Ordered by '.$this->order->customer_name,
-            'url' => route('orders.show', ['order' => $this->order->id]),
+            'url' => "http://localhost:8000/orders/" . $this->order->id,
+            // 'url' => route('orders.show', ['order' => $this->order->id]),
             'icon' => 'fas fa-wallet'
         ];
     }

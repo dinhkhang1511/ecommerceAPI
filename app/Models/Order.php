@@ -40,7 +40,8 @@ class Order extends Model
         $classes = [
             'Pending' => 'label-warning',
             'Shipping' => 'label-danger',
-            'Delivered' => 'label-success'
+            'Delivered' => 'label-success',
+            'Canceled' => 'label-danger'
         ];
         return $classes[$this->status];
     }

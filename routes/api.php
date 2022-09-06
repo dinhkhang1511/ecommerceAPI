@@ -36,6 +36,10 @@ Route::get('home','\App\Http\Controllers\api\ProductController@homePage');
 Route::get('getProduct','\App\Http\Controllers\api\ShopController@showProduct');
 Route::get('getRelatedProduct','\App\Http\Controllers\api\ShopController@showRelatedProduct');
 Route::post('checkout','\App\Http\Controllers\api\CheckoutController@checkout');
+Route::post('forget-password','\App\Http\Controllers\api\UserController@forgetPassword');
+Route::post('check-token','\App\Http\Controllers\api\UserController@checkToken');
+Route::post('reset-password','\App\Http\Controllers\api\UserController@resetPassword');
+
 
 // * AJAX ROUTE
 Route::get('get-colors/{product}/{size}', '\App\Http\Controllers\api\AjaxController@getColor');
@@ -59,8 +63,8 @@ Route::middleware('auth.api')->group(function() {
     Route::get('users-month','\App\Http\Controllers\api\UserController@getUserByMonth');
     Route::patch('users/set-admin/{id}','\App\Http\Controllers\api\UserController@setAdmin');
 
-    Route::apiResource('products','\App\Http\Controllers\api\ProductController');
     Route::post('products/{product}','\App\Http\Controllers\api\ProductController@updateProduct');
+    Route::apiResource('products','\App\Http\Controllers\api\ProductController');
     Route::get('products-filters', '\App\Http\Controllers\api\ProductController@filters');
 
     Route::apiResource('tags','\App\Http\Controllers\api\TagController');
@@ -85,6 +89,8 @@ Route::middleware('auth.api')->group(function() {
 
     Route::apiResource('orders','\App\Http\Controllers\api\OrderController');
     Route::get('orders-month','\App\Http\Controllers\api\OrderController@getOrderByMonth');
+    Route::get('orders-range', '\App\Http\Controllers\api\OrderController@getOrderByRange');
+
     Route::get('blogs/related/{id}','\App\Http\Controllers\api\BlogController@related');
     Route::apiResource('systemSettings','\App\Http\Controllers\api\SettingController');
 
@@ -109,9 +115,12 @@ Route::prefix('locations')->group(function(){
 Route::apiResource('contacts','\App\Http\Controllers\api\ContactController');
 
 
-Route::get('test',function(Request $request){
-    User::find(1)->notify(new NewOrder(Order::first()));
+Route::get('test',function(){
+    return date('y-m-d h:i:s',strtotime('+10 minutes'));
 });
+
+
+
 
 
 
